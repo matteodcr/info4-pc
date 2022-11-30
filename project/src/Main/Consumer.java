@@ -14,7 +14,9 @@ public class Consumer extends Thread{
 	public void run() {
 		while(true) {
 			try {
-				System.out.println(buff.get());
+				Message m = buff.get();
+				if(m!=null)
+					System.out.println(m);
 				sleep(consTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

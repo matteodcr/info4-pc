@@ -32,13 +32,13 @@ public class ProdConsBuffer implements IProdConsBuffer {
     public void put(Message m) throws InterruptedException {
         fifo.acquire();
         synchronized (this) {
-            while (nempty == 0)
+            while (nb_message_buffer == taille_buffer)
                 try {
                     wait();
                 } catch (InterruptedException e) {
                 }
             buffer[nempty] = m;
-            nempty = nempty + 1 % taille_buffer;
+            nempty = (nempty + 1) % (taille_buffer);
             nb_message_buffer++;
             flux_msg++;
         }
@@ -51,10 +51,16 @@ public class ProdConsBuffer implements IProdConsBuffer {
      * is retrieved before M2)
      */
     @Override
-    public Message get() throws InterruptedException {
+    public synchronized Message get() throws InterruptedException {
+    	if(nb_message_buffer==0) {
+    		notify();
+    		return null;
+    	}
+    		
         Message m = buffer[nfull];
-        nfull = nfull + 1 % taille_buffer;
+        nfull = (nfull + 1) % (taille_buffer);
         nb_message_buffer--;
+        notify();
         return m;
     }
 

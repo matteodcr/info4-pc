@@ -30,7 +30,7 @@ public class TestProdCons {
     	int prodTime = 10;
     	int consTime = 10;
     	int minProd = 5;
-    	int maxProd = 500;
+    	int maxProd = 10;
     	
     	IProdConsBuffer buff = new ProdConsBuffer(bufSz);
     	
