@@ -47,7 +47,7 @@ public class ProdConsBuffer implements IProdConsBuffer {
 
     /**
      * Retrieve a message from the buffer
-     * following a FIFO order (if M1 was put berofre M2, M1
+     * following a FIFO order (if M1 was put before M2, M1
      * is retrieved before M2)
      */
     @Override
