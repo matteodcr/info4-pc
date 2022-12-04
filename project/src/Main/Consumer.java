@@ -19,7 +19,6 @@ public class Consumer extends Thread{
 					System.out.println(m);
 				sleep(consTime);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 	}
