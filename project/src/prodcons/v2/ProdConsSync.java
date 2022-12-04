@@ -61,10 +61,8 @@ public class ProdConsSync extends Thread{
 			}
 		}
 		
-		for(int i=0; i<nProd; i++)
-			producers[i].stop();
 		for(int i=0; i<nCons; i++)
-			consumers[i].stop();
+			consumers[i].end();
 		
 	}
 	

@@ -2,8 +2,9 @@ package Main;
 
 public class Consumer extends Thread{
 	
-	int consTime;
-	IProdConsBuffer buff;
+	private int consTime;
+	private IProdConsBuffer buff;
+	private boolean ended = false;
 	
 	public Consumer(IProdConsBuffer buff, int consTime) {
 		this.consTime = consTime;
@@ -12,7 +13,7 @@ public class Consumer extends Thread{
 	
 	@Override
 	public void run() {
-		while(true) {
+		while(!ended) {
 			try {
 				Message m = buff.get();
 				if(m!=null)
@@ -21,6 +22,10 @@ public class Consumer extends Thread{
 			} catch (InterruptedException e) {
 			}
 		}
+	}
+	
+	public void end() {
+		ended = true;
 	}
 	
 }
