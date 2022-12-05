@@ -8,7 +8,7 @@ import Main.Producer;
 
 public class ProdConsSync extends Thread{
 	
-	private int nProd = 15, nCons = 10, prodTime = 10, consTime = 10, minProd = 5, maxProd = 10;
+	private int nProd = 15, nCons = 10, prodTime = 10, consTime = 10, minProd = 5, maxProd = 10, multiCons = 3;
 	private IProdConsBuffer buff;
 	
 	private Producer[] producers;
@@ -21,10 +21,11 @@ public class ProdConsSync extends Thread{
     	consTime = Integer.parseInt(properties.getProperty("consTime"));
     	minProd = Integer.parseInt(properties.getProperty("minProd"));
     	maxProd = Integer.parseInt(properties.getProperty("maxProd"));
+    	multiCons = Integer.parseInt(properties.getProperty("multiCons"));
     	this.buff = buff;
 	}
 	
-	public ProdConsSync(int nProd, int nCons, int prodTime, int consTime, int minProd, int maxProd, IProdConsBuffer buff) {
+	public ProdConsSync(int nProd, int nCons, int prodTime, int consTime, int minProd, int maxProd, int multiCons, IProdConsBuffer buff) {
 		this.nProd = nProd;
 		this.nCons = nCons;
 		this.prodTime = prodTime;
@@ -32,6 +33,7 @@ public class ProdConsSync extends Thread{
 		this.minProd = minProd;
     	this.maxProd = maxProd;
     	this.buff = buff;
+    	this.multiCons = multiCons;
 	}
 	
 	
@@ -45,7 +47,7 @@ public class ProdConsSync extends Thread{
 			nTotalMessToProduce+= producers[i].nMess;
 		}
 		for(int i=0; i<nCons; i++)
-			consumers[i]=new Consumer(buff, consTime);
+			consumers[i]=new Consumer(buff, consTime, multiCons);
 		
 		buff.setMaxMess(nTotalMessToProduce);
 		

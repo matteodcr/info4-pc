@@ -114,8 +114,9 @@ public class ProdConsBuffer3 implements IProdConsBuffer {
 
 	@Override
 	public Message[] get(int k) throws InterruptedException {
-		// Unimplemented before v5
-		return null;
+		Message[] array = new Message[k];
+		array[0]=get();
+		return array;
 	}
 
 	@Override

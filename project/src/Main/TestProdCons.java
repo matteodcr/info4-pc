@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
+import prodcons.v1.ProdConsBuffer1;
 import prodcons.v2.ProdConsSync;
-import prodcons.v3.ProdConsBuffer3;
 import prodcons.v5.ProdConsBuffer5;
 
 public class TestProdCons {

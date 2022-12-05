@@ -8,5 +8,6 @@
 	<entry key="consTime">10</entry>
 	<entry key="minProd">5</entry>
 	<entry key="maxProd">10</entry>
+	<entry key="multiCons">6</entry>
 </properties>
 	
