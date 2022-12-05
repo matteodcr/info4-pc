@@ -1,21 +1,14 @@
 package prodcons.v5;
 
-import java.util.concurrent.Semaphore;
-
 import Main.IProdConsBuffer;
 import Main.Message;
 
-public class ProdConsBuffer5 implements IProdConsBuffer{
+import java.util.concurrent.Semaphore;
 
-	int nempty;
-    int nfull;
-    int nb_message_buffer;
-    int taille_buffer;
-    int flux_msg;
-    int nbTotalMessToProduce;
-    Semaphore fifo = new Semaphore(1);
-    Semaphore global = new Semaphore(1);
-    Message[] buffer;
+public class ProdConsBuffer5 implements IProdConsBuffer {
+    private int nempty, nfull, nb_message_buffer, taille_buffer, flux_msg, maxMess;
+    private Semaphore fifoPut = new Semaphore(1), fifoGet = new Semaphore(1);
+    private Message[] buffer;
 
     public ProdConsBuffer5(int taille_buffer) {
         this.nempty = 0;
@@ -32,17 +25,21 @@ public class ProdConsBuffer5 implements IProdConsBuffer{
      * @param m
      */
     @Override
-    public synchronized void put(Message m) throws InterruptedException {
-        while (nb_message_buffer == taille_buffer)
-            try {
-                wait();
-            } catch (InterruptedException e) {
-            }
-        buffer[nempty] = m;
-        nempty = (nempty + 1) % (taille_buffer);
-        nb_message_buffer++;
-        flux_msg++;
-        notifyAll();
+    public void put(Message m) throws InterruptedException {
+    	fifoPut.acquire();
+        synchronized (this) {
+            while (nb_message_buffer == taille_buffer)
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                }
+            buffer[nempty] = m;
+            nempty = (nempty + 1) % (taille_buffer);
+            nb_message_buffer++;
+            flux_msg++;
+            notifyAll();
+        }
+        fifoPut.release();
     }
 
     /**
@@ -51,9 +48,8 @@ public class ProdConsBuffer5 implements IProdConsBuffer{
      * is retrieved before M2)
      */
     @Override
-    public synchronized Message get() throws InterruptedException {
-    	Message[] res = get(1);
-    	return res[0];
+    public Message get() throws InterruptedException {
+    	return get(1)[0];
     }
 
     /**
@@ -73,35 +69,8 @@ public class ProdConsBuffer5 implements IProdConsBuffer{
     public int totmsg() {
         return flux_msg;
     }
-
-	@Override
-	public Message[] get(int k) throws InterruptedException {
-		global.acquire();
-		Message[] array = new Message[k];
-		synchronized(this) {
-			for(int i=0; i<k; i++) {
-				while(nb_message_buffer==0) {
-					if(nbTotalMessToProduce!=flux_msg) {
-						notifyAll();
-						global.release();
-						return array;
-					}
-		    		wait();
-		    	}
-		    		
-		        Message m = buffer[nfull];
-		        nfull = (nfull + 1) % (taille_buffer);
-		        nb_message_buffer--;
-		        array[i]=m;
-			}
-		}
-		
-		notifyAll();
-		global.release();
-		return array;
-	}
-	
-	@Override
+    
+    @Override
 	public String toString() {
 		String s = new String();
 		s+="[";
@@ -113,7 +82,35 @@ public class ProdConsBuffer5 implements IProdConsBuffer{
 	}
 
 	@Override
+	public Message[] get(int k) throws InterruptedException {
+		fifoGet.acquire();
+		Message[] messages = new Message[k];
+		
+		for(int i=0; i<k; i++) {
+			synchronized(this) {
+				while(nb_message_buffer==0) {
+					if(maxMess==flux_msg) {
+						notifyAll();
+						fifoGet.release();
+						return messages;
+					}
+		    		notifyAll();
+		    		wait();
+		    	}
+		    		
+		        Message m = buffer[nfull];
+		        nfull = (nfull + 1) % (taille_buffer);
+		        nb_message_buffer--;
+		        notify();
+		        messages[i] = m;
+			}
+		}
+		fifoGet.release();
+        return messages;
+	}
+
+	@Override
 	public void setMaxMess(int n) {
-		// Unimplemented before v
+		maxMess = n;
 	}
 }
