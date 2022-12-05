@@ -5,21 +5,12 @@ import Main.Message;
 
 import java.util.concurrent.Semaphore;
 
-public class ProdConsBuffer implements IProdConsBuffer {
-    Message[] buffer;
-    int taille_buffer;
-    Semaphore waitProd;
-    int nbWaitingProd;
-    Semaphore waitCons;
-    int nbWaitingCons;
-    Semaphore mutex;
-    int in;
-    int out;
-    int nb_message_buffer;
-    int flux_msg;
-    Semaphore fifo = new Semaphore(1);
+public class ProdConsBuffer3 implements IProdConsBuffer {
+    private Message[] buffer;
+    private int taille_buffer, nbWaitingProd, nbWaitingCons, in, out, nb_message_buffer, flux_msg, maxMess;
+    private Semaphore waitProd, waitCons, mutex;
 
-    public ProdConsBuffer(int taille_buffer) {
+    public ProdConsBuffer3(int taille_buffer) {
         this.in = 0;
         this.out = 0;
         this.taille_buffer = taille_buffer;
@@ -57,7 +48,6 @@ public class ProdConsBuffer implements IProdConsBuffer {
         } else {
             mutex.release();
         }
-        mutex.release();
     }
 
     /**
@@ -69,7 +59,12 @@ public class ProdConsBuffer implements IProdConsBuffer {
     public Message get() throws InterruptedException {
         mutex.acquire(); // protéger les accès aux variables
         if (nb_message_buffer == 0) { // faire patienter les consommateurs si le tampon est vide
-            nbWaitingCons += 1;
+            if(maxMess==flux_msg) {
+            	waitCons.release();
+            	mutex.release();
+            	return null;
+            }
+        	nbWaitingCons += 1;
             mutex.release();
             waitCons.acquire();
         }
@@ -94,7 +89,7 @@ public class ProdConsBuffer implements IProdConsBuffer {
      */
     @Override
     public int nmsg() {
-        return 0;
+        return nb_message_buffer;
     }
 
     /**
@@ -103,6 +98,28 @@ public class ProdConsBuffer implements IProdConsBuffer {
      */
     @Override
     public int totmsg() {
-        return 0;
+        return flux_msg;
     }
+    
+    @Override
+	public String toString() {
+		String s = new String();
+		s+="[";
+		for(Message m : this.buffer) {
+			s+=" "+m+" ,";
+		}
+		s+="]";
+		return s;
+	}
+
+	@Override
+	public Message[] get(int k) throws InterruptedException {
+		// Unimplemented before v5
+		return null;
+	}
+
+	@Override
+	public void setMaxMess(int n) {
+		maxMess = n;
+	}
 }

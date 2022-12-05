@@ -5,16 +5,12 @@ import Main.Message;
 
 import java.util.concurrent.Semaphore;
 
-public class ProdConsBuffer implements IProdConsBuffer {
-    int nempty;
-    int nfull;
-    int nb_message_buffer;
-    int taille_buffer;
-    int flux_msg;
-    Semaphore fifo = new Semaphore(1);
-    Message[] buffer;
+public class ProdConsBuffer1 implements IProdConsBuffer {
+    private int nempty, nfull, nb_message_buffer, taille_buffer, flux_msg;
+    private Semaphore fifo = new Semaphore(1);
+    private Message[] buffer;
 
-    public ProdConsBuffer(int taille_buffer) {
+    public ProdConsBuffer1(int taille_buffer) {
         this.nempty = 0;
         this.nfull = 0;
         this.taille_buffer = taille_buffer;
@@ -81,4 +77,26 @@ public class ProdConsBuffer implements IProdConsBuffer {
     public int totmsg() {
         return flux_msg;
     }
+    
+    @Override
+	public String toString() {
+		String s = new String();
+		s+="[";
+		for(Message m : this.buffer) {
+			s+=" "+m+" ,";
+		}
+		s+="]";
+		return s;
+	}
+
+	@Override
+	public Message[] get(int k) throws InterruptedException {
+		// Unimplemented before v5
+		return null;
+	}
+
+	@Override
+	public void setMaxMess(int n) {
+		// Unimplemented before v3
+	}
 }

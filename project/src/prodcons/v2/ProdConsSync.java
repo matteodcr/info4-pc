@@ -35,7 +35,6 @@ public class ProdConsSync extends Thread{
 	}
 	
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		producers = new Producer[nProd];
@@ -47,6 +46,8 @@ public class ProdConsSync extends Thread{
 		}
 		for(int i=0; i<nCons; i++)
 			consumers[i]=new Consumer(buff, consTime);
+		
+		buff.setMaxMess(nTotalMessToProduce);
 		
 		for(int i=0; i<nProd; i++)
 			producers[i].start();

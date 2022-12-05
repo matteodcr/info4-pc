@@ -24,4 +24,8 @@ public interface IProdConsBuffer {
      * in the buffer since it's creation.
      */
     public int totmsg();
+    
+    public void setMaxMess(int n);
+    
+    public Message[] get(int k) throws InterruptedException;
 }

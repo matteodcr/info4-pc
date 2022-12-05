@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-import prodcons.v1.ProdConsBuffer;
 import prodcons.v2.ProdConsSync;
+import prodcons.v3.ProdConsBuffer3;
 
 public class TestProdCons {
     public static void main(String[] args) {
@@ -20,7 +20,7 @@ public class TestProdCons {
         
         int bufSz = Integer.parseInt(properties.getProperty("bufSz"));
     	
-    	IProdConsBuffer buff = new ProdConsBuffer(bufSz);
+    	IProdConsBuffer buff = new ProdConsBuffer3(bufSz);
     	
     	ProdConsSync synchronizer2 = new ProdConsSync(properties, buff);
     	synchronizer2.start();
