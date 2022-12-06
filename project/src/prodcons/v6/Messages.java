@@ -1,4 +1,4 @@
-package src.prodcons.v6;
+package prodcons.v6;
 
 import Main.Message;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Messages {
-    Message[] messages;
+    public Message[] messages;
     private List<Thread> blacklist = new ArrayList<Thread>();
 
     public Messages(int n, Message m) {
@@ -17,17 +17,22 @@ public class Messages {
         }
     }
 
-    public Messages(int n, Messages m) {
-        this.messages = new Message[n];
+    public Messages(int n, Message[] m) {
+        this.messages = m;
         this.blacklist = blacklist;
         this.messages = messages;
     }
 
-    void addThreadBlacklist(Thread t) {
+    boolean addThreadBlacklist(Thread t) {
         if (!blacklist.contains(t)) blacklist.add(t);
+        return true; //est-ce que c'est le dernier
     }
 
     void clearBlacklist() {
         blacklist.clear();
+    }
+    
+    public boolean finished() {
+    	return true;
     }
 }
