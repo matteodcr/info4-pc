@@ -123,4 +123,9 @@ public class ProdConsBuffer3 implements IProdConsBuffer {
 	public void setMaxMess(int n) {
 		maxMess = n;
 	}
+	
+	@Override
+	public void put(Message m, int n) throws InterruptedException {
+		put(m);
+	}
 }

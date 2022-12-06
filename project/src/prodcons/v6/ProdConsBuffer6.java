@@ -1,16 +1,16 @@
-package prodcons.v5;
+package prodcons.v6;
 
 import Main.IProdConsBuffer;
 import Main.Message;
 
 import java.util.concurrent.Semaphore;
 
-public class ProdConsBuffer5 implements IProdConsBuffer {
+public class ProdConsBuffer6 implements IProdConsBuffer {
     private int nempty, nfull, nb_message_buffer, taille_buffer, flux_msg, maxMess;
     private Semaphore fifoPut = new Semaphore(1), fifoGet = new Semaphore(1);
     private Message[] buffer;
 
-    public ProdConsBuffer5(int taille_buffer) {
+    public ProdConsBuffer6(int taille_buffer) {
         this.nempty = 0;
         this.nfull = 0;
         this.taille_buffer = taille_buffer;
