@@ -25,14 +25,14 @@ public class Messages {
 
     boolean addThreadBlacklist(Thread t) {
         if (!blacklist.contains(t)) blacklist.add(t);
-        return true; //est-ce que c'est le dernier
+        return blacklist.size() == messages.length; //est-ce que c'est le dernier
     }
 
     void clearBlacklist() {
         blacklist.clear();
     }
-    
+
     public boolean finished() {
-    	return true;
+        return true;
     }
 }
