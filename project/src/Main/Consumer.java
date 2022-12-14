@@ -31,6 +31,11 @@ public class Consumer extends Thread{
 					System.out.println(s);
 				}
 				sleep(consTime);
+				//pour gérer le cas où le consommateur est revenu précipitément à cause du cas où il n'y aura pas de nouvelle
+				//production pour remplir le multi message
+				for(Message mess : m)
+					if(mess==null)
+						ended=true;
 			} catch (InterruptedException e) {
 			}
 		}

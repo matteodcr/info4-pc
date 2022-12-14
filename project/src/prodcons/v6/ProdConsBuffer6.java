@@ -77,6 +77,12 @@ public class ProdConsBuffer6 implements IProdConsBuffer {
 			synchronized(this){
 				//on attend tant que le buffer est vide
 				while(isEmpty()) {
+					//on gère le cas où le consommateur devra attendre à l'infini car il n'y aura pas de production qui complètera
+					//le multimessage (cas particulié du TP)
+					if(maxMess==flux_msg) {
+						fifoGet.release();
+						return messages;
+					}
 					wait();
 				}
 				
@@ -107,8 +113,7 @@ public class ProdConsBuffer6 implements IProdConsBuffer {
 				//on recup le message valide
 				messages[i] = m;
 				buffer[myIndexOut]=null;
-				//on reveille de potentiels producteurs
-				notifyAll();
+				
 				
 				m.parent.index++;
 				if(m.parent.finished()) {
@@ -119,9 +124,16 @@ public class ProdConsBuffer6 implements IProdConsBuffer {
 					multimessToWait = m.parent;
 					finalMess = false;
 				}
+				//on reveille de potentiels producteurs
+				notifyAll();
 			}
 			if(!finalMess) {
 				fifoGet.release();
+				//on gère le cas où le consommateur devra attendre à l'infini car il n'y aura pas de production qui complètera
+				//le multimessage (cas particulié du TP)
+				if(maxMess==flux_msg) {
+					return messages;
+				}
 				multimessToWait.w();
 				fifoGet.acquire();
 			}
