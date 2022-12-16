@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import prodcons.v1.ProdConsBuffer1;
 import prodcons.v2.ProdConsSync;
+import prodcons.v3.ProdConsBuffer3;
 import prodcons.v5.ProdConsBuffer5;
 import prodcons.v6.ProdConsBuffer6;
 
@@ -22,7 +23,7 @@ public class TestProdCons {
         
         int bufSz = Integer.parseInt(properties.getProperty("bufSz"));
     	
-    	IProdConsBuffer buff = new ProdConsBuffer6(bufSz);
+    	IProdConsBuffer buff = new ProdConsBuffer5(bufSz);
     	
     	ProdConsSync synchronizer2 = new ProdConsSync(properties, buff);
     	synchronizer2.start();

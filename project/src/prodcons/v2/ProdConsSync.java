@@ -43,7 +43,7 @@ public class ProdConsSync extends Thread{
 		consumers = new Consumer[nCons];
 		int nTotalMessToProduce = 0;
 		for(int i=0; i<nProd; i++) {
-			producers[i]=new Producer(buff, prodTime, minProd, maxProd);
+			producers[i]=new Producer(buff, prodTime, minProd, maxProd, 1);
 			nTotalMessToProduce+= producers[i].nMess;
 		}
 		for(int i=0; i<nCons; i++)
